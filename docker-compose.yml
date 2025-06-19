@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./tsconfig.json:/usr/src/app/tsconfig.json # <-- ADD THIS LINE
+    env_file:
+      - .env
+    depends_on:
+      - registry
+    command: npm run dev
+
+  registry:
+    image: registry:2
+    ports:
+      - "5001:5000"
+    volumes:
+      - registry_data:/var/lib/registry # Persist registry data
+    environment:
+      REGISTRY_STORAGE_DELETE_ENABLED: "true"
+
+volumes:
+  registry_data:
